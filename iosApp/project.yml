@@ -1,0 +1,40 @@
+name: iosApp
+options:
+  bundleIdPrefix: com.bookxpert
+targets:
+  iosApp:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources:
+      - path: iosApp
+    settings:
+      base:
+        PRODUCT_NAME: EmployeeDirectory
+        PRODUCT_BUNDLE_IDENTIFIER: com.bookxpert.employeemanager.iosApp
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        SDKROOT: iphoneos
+        SUPPORTED_PLATFORMS: iphoneos iphonesimulator
+        TARGETED_DEVICE_FAMILY: "1,2"
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_CADisableMinimumFrameDurationOnPhone: YES
+        INFOPLIST_KEY_NSCameraUsageDescription: "We need camera access to capture employee profile photos."
+        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "We need photo library access to choose employee profile photos."
+      configs:
+        Debug:
+          BUILD_ACTIVE_RESOURCES_ONLY: YES
+        Release:
+          VALIDATE_PRODUCT: YES
+    dependencies:
+      - framework: ../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)/ComposeApp.framework
+        embed: false
+    preBuildScripts:
+      - name: Compile Kotlin Framework
+        script: |
+          cd "$SRCROOT/.."
+          ./gradlew :composeApp:embedAndSignAppleFrameworkForXcode
+        shell: /bin/sh
