@@ -38,3 +38,4 @@ targets:
           cd "$SRCROOT/.."
           ./gradlew :composeApp:embedAndSignAppleFrameworkForXcode
         shell: /bin/sh
+        basedOnDependencyAnalysis: false

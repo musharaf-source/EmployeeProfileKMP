@@ -2,10 +2,13 @@ package com.bookxpert.employeemanager.data.local.database
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
+import platform.Foundation.NSHomeDirectory
 import platform.Foundation.NSUserDomainMask
 
+@OptIn(ExperimentalForeignApi::class)
 actual fun getDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {
     val documentDirectory = NSFileManager.defaultManager.URLForDirectory(
         directory = NSDocumentDirectory,
@@ -14,7 +17,7 @@ actual fun getDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {
         create = false,
         error = null
     )
-    val dbFilePath = (documentDirectory?.path ?: "") + "/employee_manager.db"
+    val dbFilePath = (documentDirectory?.path ?: (NSHomeDirectory() + "/Documents")) + "/employee_manager.db"
     return Room.databaseBuilder<AppDatabase>(
         name = dbFilePath
     )

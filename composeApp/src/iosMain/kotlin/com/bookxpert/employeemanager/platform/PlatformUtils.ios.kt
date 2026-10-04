@@ -5,6 +5,7 @@ import platform.Foundation.NSDateFormatter
 import platform.Foundation.NSNumber
 import platform.Foundation.NSNumberFormatter
 import platform.Foundation.NSNumberFormatterCurrencyStyle
+import platform.Foundation.dateWithTimeIntervalSince1970
 
 actual object PlatformUtils {
 
@@ -17,7 +18,7 @@ actual object PlatformUtils {
 
     actual fun formatDate(epochMillis: Long): String {
         if (epochMillis <= 0) return "-"
-        val date = NSDate(timeIntervalSince1970 = epochMillis / 1000.0)
+        val date = NSDate.dateWithTimeIntervalSince1970(epochMillis / 1000.0)
         val formatter = NSDateFormatter().apply {
             dateFormat = "dd MMM yyyy"
         }
@@ -26,7 +27,7 @@ actual object PlatformUtils {
 
     actual fun formatDateTime(epochMillis: Long): String {
         if (epochMillis <= 0) return "-"
-        val date = NSDate(timeIntervalSince1970 = epochMillis / 1000.0)
+        val date = NSDate.dateWithTimeIntervalSince1970(epochMillis / 1000.0)
         val formatter = NSDateFormatter().apply {
             dateFormat = "dd MMM yyyy, hh:mm a"
         }
