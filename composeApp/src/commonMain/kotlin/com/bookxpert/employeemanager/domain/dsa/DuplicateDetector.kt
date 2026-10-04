@@ -4,16 +4,16 @@ import com.bookxpert.employeemanager.domain.model.Employee
 import com.bookxpert.employeemanager.domain.util.PhoneNormalizer
 
 /**
- * Checks for duplicate email or normalised phone before persist.
- * Time complexity: O(1) average — HashSet contains()
- * Space complexity: O(n) where n = number of employees
+ * Checks for duplicate email or normalized phone
+ * Time complexity: O(1) average
+ * Space complexity: O(n) where n is total employees
  */
 class DuplicateDetector {
 
     private val emailIndex = HashSet<String>()
     private val phoneIndex = HashSet<String>()
 
-    // Seed in-memory sets from room cache on app start
+    // Load existing emails and phone numbers into memory
     fun seed(employees: List<Employee>) {
         emailIndex.clear()
         phoneIndex.clear()
@@ -32,7 +32,7 @@ class DuplicateDetector {
         }
     }
 
-    // Fast O(1) check for emails; allows self in edit mode
+    // Check if email already exists
     fun isEmailDuplicate(email: String, existingList: List<Employee> = emptyList(), excludeEmployeeId: Long? = null): Boolean {
         val cleanEmail = email.trim().lowercase()
         if (cleanEmail.isEmpty()) return false
@@ -43,7 +43,7 @@ class DuplicateDetector {
         return existingList.any { it.id != excludeEmployeeId && it.email.trim().equals(cleanEmail, ignoreCase = true) }
     }
 
-    // Fast O(1) check for normalized phones; allows self in edit mode
+    // Check if phone number already exists
     fun isPhoneDuplicate(rawPhone: String, existingList: List<Employee> = emptyList(), excludeEmployeeId: Long? = null): Boolean {
         val normPhone = PhoneNormalizer.normalize(rawPhone)
         if (normPhone.isEmpty()) return false

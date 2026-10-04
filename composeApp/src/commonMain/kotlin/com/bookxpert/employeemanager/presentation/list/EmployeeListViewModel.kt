@@ -36,7 +36,7 @@ class EmployeeListViewModel(
     private val _undoableEmployee = MutableStateFlow<Employee?>(null)
     private val _showUndoSnackbar = MutableStateFlow(false)
 
-    // Debounce search queries by 300ms for smooth UI rendering
+    // Wait 300ms before triggering search
     private val debouncedSearchQuery = _searchQuery.debounce(300)
 
     val uiState: StateFlow<EmployeeListUiState> = combine(
@@ -61,7 +61,7 @@ class EmployeeListViewModel(
         val undoable = args[7] as Employee?
         val showUndo = args[8] as Boolean
 
-        // Update in-memory search and duplicate indices
+        // Update in-memory search and duplicate lists
         duplicateDetector.seed(rawList)
         rebuildTrieIndex(rawList)
 
@@ -100,7 +100,7 @@ class EmployeeListViewModel(
     ): List<Employee> {
         val query = searchQuery.trim().lowercase()
 
-        // 1. Filter by Search Query (Simultaneous check across Name, Email, Department)
+        // Match search query with name email and department
         val searchFiltered = if (query.isEmpty()) {
             rawList
         } else {
@@ -113,23 +113,20 @@ class EmployeeListViewModel(
             }
         }
 
-        // 2. Filter by Criteria (AND composition)
+        // Apply department status and employment filters
         val criteriaFiltered = searchFiltered.filter { emp ->
-            // Department filter
             val matchesDept = filter.selectedDepartments.isEmpty() || filter.selectedDepartments.contains(emp.department)
-            // Status filter
             val matchesStatus = when (filter.statusFilter) {
                 ActiveStatusFilter.ALL -> true
                 ActiveStatusFilter.ACTIVE_ONLY -> emp.isActive
                 ActiveStatusFilter.INACTIVE_ONLY -> !emp.isActive
             }
-            // Employment Type filter
             val matchesEmpType = filter.selectedEmploymentTypes.isEmpty() || filter.selectedEmploymentTypes.contains(emp.employmentType)
 
             matchesDept && matchesStatus && matchesEmpType
         }
 
-        // 3. Sort Order
+        // Sort items
         return when (sort) {
             SortOption.NAME_ASC -> criteriaFiltered.sortedBy { it.fullName.lowercase() }
             SortOption.NAME_DESC -> criteriaFiltered.sortedByDescending { it.fullName.lowercase() }

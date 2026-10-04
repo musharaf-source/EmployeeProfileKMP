@@ -3,7 +3,7 @@ package com.bookxpert.employeemanager.domain.util
 object PhoneNormalizer {
 
     /**
-     * Strips +, 91, 0, spaces, dashes, and parentheses to standardize phone lookup.
+     * Cleans phone number by removing country code, spaces and special characters
      * Time complexity: O(k) where k is string length
      */
     fun normalize(raw: String): String {

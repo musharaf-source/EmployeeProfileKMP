@@ -3,9 +3,9 @@ package com.bookxpert.employeemanager.domain.dsa
 import com.bookxpert.employeemanager.domain.model.Employee
 
 /**
- * Stack for managing undo operations on deleted employees.
- * Time complexity: O(1) push / pop
- * Space complexity: O(k) bounded to max depth (default 10)
+ * Stack to undo deleted employees
+ * Time complexity: O(1) push and pop
+ * Space complexity: O(k) bounded by max depth
  */
 class UndoStack(
     private val maxCapacity: Int = 10
@@ -15,7 +15,7 @@ class UndoStack(
     val size: Int get() = stack.size
     val canUndo: Boolean get() = stack.isNotEmpty()
 
-    // Push deleted record onto stack; drops oldest record if exceeds depth
+    // Add deleted employee to stack
     fun push(employee: Employee) {
         if (stack.size >= maxCapacity) {
             stack.removeFirst()
@@ -23,7 +23,7 @@ class UndoStack(
         stack.addLast(employee)
     }
 
-    // Pop most recently deleted record for re-insertion
+    // Get last deleted employee
     fun pop(): Employee? {
         return if (stack.isNotEmpty()) stack.removeLast() else null
     }

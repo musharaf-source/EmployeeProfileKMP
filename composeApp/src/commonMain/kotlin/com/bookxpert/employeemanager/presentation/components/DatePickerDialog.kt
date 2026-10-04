@@ -22,7 +22,7 @@ fun EmployeeDatePickerDialog(
         initialSelectedDateMillis = initialDateEpochMillis ?: maxDateEpochMillis,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                // Disallow future dates (allowing 1 day margin for timezone offset)
+                // Disallow future dates
                 return utcTimeMillis <= maxDateEpochMillis + 86400000
             }
         }

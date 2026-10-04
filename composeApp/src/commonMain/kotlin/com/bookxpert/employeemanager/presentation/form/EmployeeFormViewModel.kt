@@ -82,7 +82,6 @@ class EmployeeFormViewModel(
     }
 
     fun onPhoneChanged(value: String) {
-        // Keep numeric and standard characters
         val filtered = value.filter { it.isDigit() || it in "+- ()" }
         _uiState.update { it.copy(phone = filtered, phoneError = null) }
     }
@@ -179,7 +178,7 @@ class EmployeeFormViewModel(
     fun saveEmployee(onSuccess: () -> Unit) {
         val state = _uiState.value
 
-        // Full validation pass
+        // Validate all form fields
         val nameErr = FormValidator.validateFullName(state.fullName, allEmployeesCache, state.employeeId)
         val emailErr = FormValidator.validateEmail(state.email, duplicateDetector, allEmployeesCache, state.employeeId)
         val phoneErr = FormValidator.validatePhone(state.phone, duplicateDetector, allEmployeesCache, state.employeeId)

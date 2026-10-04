@@ -2,10 +2,7 @@ package com.bookxpert.employeemanager.domain.dsa
 
 import com.bookxpert.employeemanager.domain.model.Employee
 
-/**
- * Pure Kotlin Min-Heap to support top-N queries without java.util.PriorityQueue
- * so it compiles seamlessly on both Android and iOS targets.
- */
+// Simple min heap for multiplatform support
 class MinHeap<T>(
     private val capacity: Int,
     private val comparator: Comparator<T>
@@ -72,12 +69,11 @@ class MinHeap<T>(
 }
 
 /**
- * Returns the top [n] employees by salary using a min-heap of size n.
- * Time complexity: O(m log n) where m = total employees, n = top count
- * Space complexity: O(n) heap holds at most n entries
+ * Returns top employees by salary using a min heap
+ * Time complexity: O(m log n) where m is total employees and n is top count
+ * Space complexity: O(n) heap holds at most n items
  *
- * Why not sort? Full sort = O(m log m). When n << m (e.g. n=5, m=500)
- * the heap approach is significantly faster and uses constant extra space.
+ * Why min heap? Full sort takes O(m log m) time. When n is small, heap is faster and uses less memory.
  */
 fun topNBySalary(employees: List<Employee>, n: Int = 5): List<Employee> {
     if (n <= 0 || employees.isEmpty()) return emptyList()
