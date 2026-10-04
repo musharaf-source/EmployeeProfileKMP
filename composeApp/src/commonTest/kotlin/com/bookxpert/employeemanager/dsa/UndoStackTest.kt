@@ -13,7 +13,7 @@ import kotlin.test.assertTrue
 
 class UndoStackTest {
 
-    private fun createDummy(id: Long) = Employee(
+    private fun createTestEmployee(id: Long) = Employee(
         id = id,
         fullName = "Employee $id",
         email = "emp$id@company.com",
@@ -32,8 +32,8 @@ class UndoStackTest {
     @Test
     fun pushAndPop_followsLifoOrder() {
         val stack = UndoStack(maxCapacity = 10)
-        val emp1 = createDummy(1)
-        val emp2 = createDummy(2)
+        val emp1 = createTestEmployee(1)
+        val emp2 = createTestEmployee(2)
 
         stack.push(emp1)
         stack.push(emp2)
@@ -49,10 +49,10 @@ class UndoStackTest {
     @Test
     fun push_dropsOldestWhenCapacityExceeded() {
         val stack = UndoStack(maxCapacity = 3)
-        stack.push(createDummy(1))
-        stack.push(createDummy(2))
-        stack.push(createDummy(3))
-        stack.push(createDummy(4)) // Should evict ID 1
+        stack.push(createTestEmployee(1))
+        stack.push(createTestEmployee(2))
+        stack.push(createTestEmployee(3))
+        stack.push(createTestEmployee(4))
 
         assertEquals(3, stack.size)
         assertEquals(4L, stack.pop()?.id)

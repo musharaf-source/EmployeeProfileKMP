@@ -70,11 +70,8 @@ class DuplicateDetectorTest {
 
     @Test
     fun isDuplicate_allowsSelfInEditMode() {
-        // In edit mode for ID 1, using own email should not trigger duplicate
         assertFalse(detector.isEmailDuplicate("john.doe@bookxpert.com", seedList, excludeEmployeeId = 1))
         assertFalse(detector.isPhoneDuplicate("+91 9876543210", seedList, excludeEmployeeId = 1))
-
-        // But attempting to use ID 2's email when editing ID 1 MUST trigger duplicate
         assertTrue(detector.isEmailDuplicate("jane.smith@bookxpert.com", seedList, excludeEmployeeId = 1))
     }
 
