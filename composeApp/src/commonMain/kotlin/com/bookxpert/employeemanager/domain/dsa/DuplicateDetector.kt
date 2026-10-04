@@ -4,24 +4,16 @@ import com.bookxpert.employeemanager.domain.model.Employee
 import com.bookxpert.employeemanager.domain.util.PhoneNormalizer
 
 /**
- * In-memory index using HashSets for instant duplicate checking before hitting SQLite.
- *
- * Time Complexity:
- * - isEmailDuplicate: O(1) average lookup
- * - isPhoneDuplicate: O(1) average lookup
- * - insert / remove: O(1) average
- *
- * Space Complexity:
- * - O(N) where N is the total number of employee records loaded.
+ * Checks for duplicate email or normalised phone before persist.
+ * Time complexity: O(1) average — HashSet contains()
+ * Space complexity: O(n) where n = number of employees
  */
 class DuplicateDetector {
 
     private val emailIndex = HashSet<String>()
     private val phoneIndex = HashSet<String>()
 
-    /**
-     * Hydrates the in-memory hash sets with existing records from the database.
-     */
+    // Seed in-memory sets from room cache on app start
     fun seed(employees: List<Employee>) {
         emailIndex.clear()
         phoneIndex.clear()
@@ -40,10 +32,7 @@ class DuplicateDetector {
         }
     }
 
-    /**
-     * Checks if an email is already assigned to another employee.
-     * When [excludeEmployeeId] is provided (edit mode), matches for the current user are ignored.
-     */
+    // Fast O(1) check for emails; allows self in edit mode
     fun isEmailDuplicate(email: String, existingList: List<Employee> = emptyList(), excludeEmployeeId: Long? = null): Boolean {
         val cleanEmail = email.trim().lowercase()
         if (cleanEmail.isEmpty()) return false
@@ -54,10 +43,7 @@ class DuplicateDetector {
         return existingList.any { it.id != excludeEmployeeId && it.email.trim().equals(cleanEmail, ignoreCase = true) }
     }
 
-    /**
-     * Checks if a phone number is already assigned to another employee.
-     * When [excludeEmployeeId] is provided (edit mode), matches for the current user are ignored.
-     */
+    // Fast O(1) check for normalized phones; allows self in edit mode
     fun isPhoneDuplicate(rawPhone: String, existingList: List<Employee> = emptyList(), excludeEmployeeId: Long? = null): Boolean {
         val normPhone = PhoneNormalizer.normalize(rawPhone)
         if (normPhone.isEmpty()) return false

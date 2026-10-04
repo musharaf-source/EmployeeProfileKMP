@@ -3,8 +3,8 @@ package com.bookxpert.employeemanager.domain.dsa
 import com.bookxpert.employeemanager.domain.model.Employee
 
 /**
- * Pure Kotlin Min-Heap implementation to support top-N queries across Android and iOS
- * without depending on java.util.PriorityQueue.
+ * Pure Kotlin Min-Heap to support top-N queries without java.util.PriorityQueue
+ * so it compiles seamlessly on both Android and iOS targets.
  */
 class MinHeap<T>(
     private val capacity: Int,
@@ -72,16 +72,12 @@ class MinHeap<T>(
 }
 
 /**
- * Finds the top [n] employees by salary using a bounded Min-Heap.
+ * Returns the top [n] employees by salary using a min-heap of size n.
+ * Time complexity: O(m log n) where m = total employees, n = top count
+ * Space complexity: O(n) heap holds at most n entries
  *
- * Algorithmic Details:
- * - Time Complexity: O(M * log N) where M is the total employee count and N is the top count.
- * - Space Complexity: O(N) auxiliary space — the heap retains at most N elements in memory.
- *
- * Engineering Rationale:
- * A full collection sort runs in O(M * log M) time and O(M) space. When N is small relative
- * to M (e.g., top 5 out of 10,000 employees), iterating with a min-heap of size N avoids
- * sorting the entire dataset, saving both CPU cycles and memory allocations.
+ * Why not sort? Full sort = O(m log m). When n << m (e.g. n=5, m=500)
+ * the heap approach is significantly faster and uses constant extra space.
  */
 fun topNBySalary(employees: List<Employee>, n: Int = 5): List<Employee> {
     if (n <= 0 || employees.isEmpty()) return emptyList()
