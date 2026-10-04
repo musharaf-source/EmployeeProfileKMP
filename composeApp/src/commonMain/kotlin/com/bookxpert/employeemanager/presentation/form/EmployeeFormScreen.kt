@@ -172,7 +172,7 @@ fun EmployeeFormScreen(
                 value = uiState.fullName,
                 onValueChange = { viewModel.onFullNameChanged(it) },
                 label = "Full Name*",
-                placeholder = "e.g. John Doe",
+                placeholder = "BookXpert",
                 leadingIcon = Icons.Default.Person,
                 errorMessage = uiState.fullNameError,
                 onFocusLost = { viewModel.onFullNameBlur() }
@@ -185,7 +185,7 @@ fun EmployeeFormScreen(
                 value = uiState.email,
                 onValueChange = { viewModel.onEmailChanged(it) },
                 label = "Email Address*",
-                placeholder = "john.doe@company.com",
+                placeholder = "Bookexpert@gmail.com",
                 leadingIcon = Icons.Default.Email,
                 errorMessage = uiState.emailError,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
