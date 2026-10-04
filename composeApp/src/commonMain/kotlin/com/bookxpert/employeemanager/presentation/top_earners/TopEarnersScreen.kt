@@ -24,7 +24,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -49,6 +48,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bookxpert.employeemanager.platform.PlatformUtils
@@ -107,53 +108,81 @@ fun TopEarnersScreen(
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .padding(horizontal = 16.dp, vertical = 10.dp)
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp)
+                    ) {
                         Text(
-                            text = "Top N Employees (Min-Heap)",
+                            text = "Top N Employees",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "O(M log N) bounded heap algorithm",
+                            text = "Min-Heap O(M log N) algorithm",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.primary
                         )
                     }
 
-                    // Stepper Control (1 to 10)
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    // Stepper Control (1 to 10) with equal circular buttons
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End
+                    ) {
                         FilledIconButton(
                             onClick = { viewModel.decrementCount() },
                             enabled = uiState.topCount > 1,
                             modifier = Modifier.size(36.dp),
-                            shape = CircleShape
+                            shape = CircleShape,
+                            colors = IconButtonDefaults.filledIconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary,
+                                disabledContainerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
+                                disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                            )
                         ) {
-                            Icon(Icons.Default.Remove, contentDescription = "Decrease")
+                            Icon(
+                                imageVector = Icons.Default.Remove,
+                                contentDescription = "Decrease",
+                                modifier = Modifier.size(18.dp)
+                            )
                         }
 
                         Text(
                             text = "${uiState.topCount}",
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.ExtraBold,
-                            modifier = Modifier.padding(horizontal = 14.dp)
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.width(36.dp)
                         )
 
                         FilledIconButton(
                             onClick = { viewModel.incrementCount() },
                             enabled = uiState.topCount < 10,
                             modifier = Modifier.size(36.dp),
-                            shape = CircleShape
+                            shape = CircleShape,
+                            colors = IconButtonDefaults.filledIconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary,
+                                disabledContainerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
+                                disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                            )
                         ) {
-                            Icon(Icons.Default.Add, contentDescription = "Increase")
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Increase",
+                                modifier = Modifier.size(18.dp)
+                            )
                         }
                     }
                 }
@@ -213,12 +242,12 @@ fun TopEarnersScreen(
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(16.dp)
+                                modifier = Modifier.padding(14.dp)
                             ) {
                                 // Rank Badge
                                 Box(
                                     modifier = Modifier
-                                        .size(44.dp)
+                                        .size(40.dp)
                                         .clip(CircleShape)
                                         .background(rankBg),
                                     contentAlignment = Alignment.Center
@@ -227,16 +256,16 @@ fun TopEarnersScreen(
                                         text = rankSuffix,
                                         color = Color.White,
                                         fontWeight = FontWeight.ExtraBold,
-                                        fontSize = 13.sp
+                                        fontSize = 12.sp
                                     )
                                 }
 
-                                Spacer(modifier = Modifier.width(14.dp))
+                                Spacer(modifier = Modifier.width(10.dp))
 
                                 EmployeeAvatar(
                                     fullName = employee.fullName,
                                     imagePath = employee.profileImagePath,
-                                    size = 48.dp
+                                    size = 44.dp
                                 )
 
                                 Spacer(modifier = Modifier.width(12.dp))
@@ -245,11 +274,15 @@ fun TopEarnersScreen(
                                     Text(
                                         text = employee.fullName,
                                         style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
                                     )
                                     Spacer(modifier = Modifier.height(2.dp))
                                     DepartmentBadge(department = employee.department)
                                 }
+
+                                Spacer(modifier = Modifier.width(8.dp))
 
                                 Text(
                                     text = PlatformUtils.formatCurrency(employee.salary),
